@@ -76,5 +76,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Using::class, 'user_id', 'id');
     }
+    public function sparteparts(): HasMany
+    {
+        return $this->hasMany(Sparepart::class, 'user_id', 'id');
+    }
 
 }

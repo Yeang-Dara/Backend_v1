@@ -15,4 +15,6 @@
         Route::get('type', 'UsingController@type');
         Route::get('warranty/{id}', 'UsingController@getWarranty');
         Route::get('report', 'UsingController@getReport');
+        Route::get('export', 'UsingController@export');
+        Route::post('import', 'UsingController@importData');
  });

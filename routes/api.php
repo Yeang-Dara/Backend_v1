@@ -25,8 +25,14 @@ $router->group(['prefix' => 'v1'], function () {
     require __DIR__ . '/v1/user.php';
     require __DIR__ . '/v1/using.php';
     require __DIR__ . '/v1/stock.php';
+    require __DIR__ . '/v1/mainpart.php';
+    require __DIR__ . '/v1/maintenace.php';
+    require __DIR__ . '/v1/spareparts.php';
+  
    
 });
+
+// Route::get('getData', [ReplaceMainpartController::class, 'test']);
 
  
    

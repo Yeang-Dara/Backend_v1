@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Using extends ParentModel
 {
@@ -40,11 +41,7 @@ class Using extends ParentModel
     ];
     public static function rulesToCreate():array
     {
-        return [
-            // 'install_date'=>'date_format:Y-m-d',
-            // 'delivery_date'=>'date_format:Y-m-d',
-            // 'take_over_date'=>'date_format:Y-m-d',
-        ];
+        return [];
     }
     public static function rulesToCreateMessages(){
         return [];
@@ -59,4 +56,14 @@ class Using extends ParentModel
     {
         return $this->belongsTo(Users::class,'user_id', 'id');
     }
+    public function mainparts():HasMany
+    {
+        return $this->hasMany(Mainpart::class,'machine_id', 'id');
+    }
+    public function maintenaces():HasMany
+    {
+        return $this->hasMany(Maintenace::class,'atm_id', 'id');
+    }
+
+
 }

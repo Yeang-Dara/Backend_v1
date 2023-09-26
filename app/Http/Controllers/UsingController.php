@@ -8,7 +8,8 @@ use Illuminate\Http\JsonResponse;
 use App\Models\Using;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use Maatwebsit\Excel\Facades\Excel;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\MachinesExport;
 
 class UsingController extends ParentController
 {
@@ -44,19 +45,17 @@ class UsingController extends ParentController
   public function getTotal()
   {
     $order = DB::table('orders')->where('status', '=', 'Ordering')
-                  ->sum('amount');
-
+      ->sum('amount');
     $total = DB::table('usings')->count();
     $active = DB::table('usings')->where('status', '=', 'active')->count();
     $status = DB::table('usings')->where('status', '=', 'non-active')->count();
-    $atm= DB::table('usings')->where('type_name', '=', 'ATM')->count();
-    $crm= DB::table('usings')->where('type_name', '=', 'CRM')->count();
-    $dc365= DB::table('usings')->where('type_name', '=', 'DC365')->count();
-    $bti=DB::table('usings')->where('bank_name', '=', 'BTI')->count();
-    $aba=DB::table('usings')->where('bank_name', '=', 'ABA Bank')->count();
-    $amk=DB::table('usings')->where('bank_name', '=', 'AMK MFI')->count();
-    $wing=DB::table('usings')->where('bank_name', '=', 'Wing')->count();
-
+    $atm = DB::table('usings')->where('type_name', '=', 'ATM')->count();
+    $crm = DB::table('usings')->where('type_name', '=', 'CRM')->count();
+    $dc365 = DB::table('usings')->where('type_name', '=', 'DC365')->count();
+    $bti = DB::table('usings')->where('bank_name', '=', 'BTI')->count();
+    $aba = DB::table('usings')->where('bank_name', '=', 'ABA Bank')->count();
+    $amk = DB::table('usings')->where('bank_name', '=', 'AMK MFI')->count();
+    $wing = DB::table('usings')->where('bank_name', '=', 'Wing')->count();
     return ([
       "order" => $order,
       "totals" => $total,
@@ -64,7 +63,7 @@ class UsingController extends ParentController
       "nonactive" => $status,
       "atm" => $atm,
       "crm" => $crm,
-      "dc365" => $dc365,	
+      "dc365" => $dc365,
       "bti" => $bti,
       "aba" => $aba,
       "amk" => $amk,
@@ -128,18 +127,16 @@ class UsingController extends ParentController
   }
   public function getWarranty($id)
   {
-
     $warranty = Using::find($id)->warranty_days;
     $date = Using::find($id)->delivery_date;
     $currentDay = Carbon::now()->format('Y-m-d');
-
     $startDate = Carbon::parse($date);
     $endDate = Carbon::parse($currentDay);
     $daysCount = $endDate->diffInDays($startDate);
     if ($daysCount >= $warranty) {
-      $mass = "This machine is out the warranty";
+      $mass = "This machine is out of warranty";
     } else {
-      $mass = "This machine is on the warranty";
+      $mass = "This machine is on of warranty";
     }
     return ([
       'delivery date' => $date,
@@ -149,13 +146,87 @@ class UsingController extends ParentController
       "status" => $mass
     ]);
   }
-  public function importFile(Request $request)
-  {
-    $file = $request->files('file');
-  }
+
   public function getReport()
   {
     $status = DB::table('usings')->where('status', '=', 'non-active')->get();
-     return $status;   
+    return $status;
+  }
+  public function export()
+  {
+    $columns = ['atm_id',
+    'alias_id',
+    'install_date',
+    'apk_version',
+    'image_version',
+    'mainboard_version',
+    'android_version',
+    'delivery_date',
+    'take_over_date',
+    'category_name',
+    'serial_number',
+    'model_name',
+    'warranty_days',
+    'comment',
+    'type_name',
+    'status',
+    'bank_name',
+    'site_id',
+    'region_name',
+    'site_name',
+    'location',
+    'city',
+    'state_name',
+    'accessibility',
+    'address'];
+    $results = DB::table('usings')->select($columns)->get();
+  return $results;
+
+  }
+  function importData(Request $request)
+  {
+    $this->validate($request, [
+      'select_file'  => 'required|mimes:xls,xlsx'
+    ]);
+
+    $path = $request->file('select_file')->getRealPath();
+
+    $data = Excel::load($path)->get();
+
+    if ($data->count() > 0) {
+      foreach ($data->toArray() as $key => $value) {
+        foreach ($value as $row) {
+
+          $insert_data[] = array(
+            'user_id'  => $row['user_id']=1,
+            'atm_id' => $row['atm_id'],
+            'alias_id' => $row['alias_id'],
+            'site_id' => $row['site_id'],
+            'site_name' => $row['site_name'],
+            'address'=>$row['address'],
+            'city' => $row['city'],
+            'state_name' =>$row['state_name'],
+            'region_name' => $row['region_name'],
+            'location' => $row['location'],
+            'accessibility'=>$row['accessibility'],
+            'install_date'=>$row['install_date'],
+            'delivery_date' => $row['delivery_date'],
+            'take_over_date' => $row['take_over_date'],
+            'category_name' => $row['category_name'],
+            'model_name' => $row['model_name'],
+            'serial_number'=>$row['serial_number'],
+            'type_name' => $row['type_name'],
+            'warranty_days' => $row['warranty_days'],
+            'bank_name' => $row['bank_name'],
+            'status'=>$row['status'],
+          );
+        }
+      }
+
+      if (!empty($insert_data)) {
+        DB::table('usings')->insert($insert_data);
+      }
+    }
+    return back()->with('success', 'Excel Data Imported successfully.');
   }
 }
