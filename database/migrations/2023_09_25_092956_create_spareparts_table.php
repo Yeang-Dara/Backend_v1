@@ -16,12 +16,10 @@ return new class extends Migration
             $table->integer('user_id');
             $table->string('spareparts_name');
             $table->integer('quantity');
-            $table->integer('quantity_used');
-            $table->integer('quantity_remain');
+            $table->integer('quantity_used')->nullable();
+            $table->integer('quantity_remain')->nullable();
             $table->string('for_machine_model');
-            $table->string('part_number');
-            $table->integer('q_bti');
-            $table->integer('q_deam');
+            $table->string('part_number')->nullable();
             $table->timestamps();
             $table->foreign('user_id')
                 ->references('id')

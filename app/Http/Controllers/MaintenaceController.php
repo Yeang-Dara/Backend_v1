@@ -36,7 +36,7 @@ class MaintenaceController extends ParentController
     {
       return parent::delete($id);
     }
-    public function get($id)
+    public function getData($id)
     {
         $data = DB::table('maintenaces')
                     ->where('atm_id', '=', $id)

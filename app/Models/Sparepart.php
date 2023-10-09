@@ -17,8 +17,6 @@ class Sparepart extends ParentModel
         'quantity_remain',
         'for_machine_model',
         'part_number',
-        'q_bti',
-        'q_deam',
     ];
     public static function rulesToCreate(): array 
     {
