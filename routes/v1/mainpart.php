@@ -6,7 +6,8 @@ Route::group(['prefix' => 'mainpart'],function(){
     Route::get('test', 'MainpartController@getTest');
     Route::post('create', 'MainpartController@create');	
     Route::get('all', 'MainpartController@getAll');
-    Route::put('update/{id}', 'MainpartController@update');
-    Route::delete('delete/{id}', 'MainpartController@delete');
+    Route::put('update/{id}', 'MainpartController@updatData');
+    Route::delete('delete/{id}', 'MainpartController@deleteMainpart');
     Route::get('getbyid/{id}', 'MainpartController@get');
+    Route::post('add', 'MainpartController@Store');	
 });

@@ -183,50 +183,49 @@ class UsingController extends ParentController
   return $results;
 
   }
-  function importData(Request $request)
-  {
-    $this->validate($request, [
-      'select_file'  => 'required|mimes:xls,xlsx'
-    ]);
+  // function importData(Request $request)
+  // {
+  //   $this->validate($request, [
+  //     'select_file'  => 'required|mimes:xls,xlsx'
+  //   ]);
 
-    $path = $request->file('select_file')->getRealPath();
+  //   $path = $request->file('select_file')->getRealPath();
 
-    $data = Excel::load($path)->get();
+  //   $data = Excel::load($path)->get();
 
-    if ($data->count() > 0) {
-      foreach ($data->toArray() as $key => $value) {
-        foreach ($value as $row) {
+  //   if ($data->count() > 0) {
+  //     foreach ($data->toArray() as $key => $value) {
+  //       foreach ($value as $row) {
 
-          $insert_data[] = array(
-            'user_id'  => $row['user_id']=1,
-            'atm_id' => $row['atm_id'],
-            'alias_id' => $row['alias_id'],
-            'site_id' => $row['site_id'],
-            'site_name' => $row['site_name'],
-            'address'=>$row['address'],
-            'city' => $row['city'],
-            'state_name' =>$row['state_name'],
-            'region_name' => $row['region_name'],
-            'location' => $row['location'],
-            'accessibility'=>$row['accessibility'],
-            'install_date'=>$row['install_date'],
-            'delivery_date' => $row['delivery_date'],
-            'take_over_date' => $row['take_over_date'],
-            'category_name' => $row['category_name'],
-            'model_name' => $row['model_name'],
-            'serial_number'=>$row['serial_number'],
-            'type_name' => $row['type_name'],
-            'warranty_days' => $row['warranty_days'],
-            'bank_name' => $row['bank_name'],
-            'status'=>$row['status'],
-          );
-        }
-      }
-
-      if (!empty($insert_data)) {
-        DB::table('usings')->insert($insert_data);
-      }
-    }
-    return back()->with('success', 'Excel Data Imported successfully.');
-  }
+  //         $insert_data[] = array(
+  //           'user_id'  => $row['user_id']=1,
+  //           'atm_id' => $row['atm_id'],
+  //           'alias_id' => $row['alias_id'],
+  //           'site_id' => $row['site_id'],
+  //           'site_name' => $row['site_name'],
+  //           'address'=>$row['address'],
+  //           'city' => $row['city'],
+  //           'state_name' =>$row['state_name'],
+  //           'region_name' => $row['region_name'],
+  //           'location' => $row['location'],
+  //           'accessibility'=>$row['accessibility'],
+  //           'install_date'=>$row['install_date'],
+  //           'delivery_date' => $row['delivery_date'],
+  //           'take_over_date' => $row['take_over_date'],
+  //           'category_name' => $row['category_name'],
+  //           'model_name' => $row['model_name'],
+  //           'serial_number'=>$row['serial_number'],
+  //           'type_name' => $row['type_name'],
+  //           'warranty_days' => $row['warranty_days'],
+  //           'bank_name' => $row['bank_name'],
+  //           'status'=>$row['status'],
+  //         );
+  //       }
+  //     }
+  //     if (!empty($insert_data)) {
+  //       DB::table('usings')->insert($insert_data);
+  //     }
+  //   }
+  //   return back()->with('success', 'Excel Data Imported successfully.');
+  // }
 }

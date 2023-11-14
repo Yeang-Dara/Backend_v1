@@ -8,4 +8,5 @@ Route::group(['prefix' => 'spareparts'], function(){
     Route::get('getdata', 'SparepartController@getData');
     Route::put('update/{id}', 'SparepartController@updateData');
     Route::delete('delete/{id}', 'SparepartController@delete');
+    Route::get('getsparepart', 'SparepartController@getSparepart');
 });

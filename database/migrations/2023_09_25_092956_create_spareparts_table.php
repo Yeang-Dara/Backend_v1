@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('spareparts', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
+            $table->integer('user_id')->nullable();
             $table->string('spareparts_name');
             $table->integer('quantity');
             $table->integer('quantity_used')->nullable();

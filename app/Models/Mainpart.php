@@ -13,10 +13,9 @@ class Mainpart extends Model
     protected $table = 'mainparts';
     protected $fillable = [
         'machine_id',
-        'mainpart_name',
+        'sparepart_id',
         'part_number',
         'replacer_name',
-        'remarks',
         'replace_date',
         'quantity',
 
@@ -40,5 +39,9 @@ class Mainpart extends Model
     public function mainparts():BelongsTo
     {
         return $this->belongsTo(Usings::class, 'machine_id','id');
+    }
+    public function main_spareparts():BelongsTo
+    {
+        return $this->belongsTo(Sparepart::class, 'sparepart_id','id');
     }
 }

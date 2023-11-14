@@ -46,6 +46,11 @@ class SparepartController extends ParentController
         $request['quantity_remain'] = $data['quantity']- $request['quantity_used'];
         return parent::update($request, $id);
     }
+    elseif($request['quantity_used']== null)
+    {
+        $request['quantity_remain'] = $request['quantity']- $data['quantity_used'];
+        return parent::update($request, $id);
+    }
         $request['quantity_remain'] = $request['quantity']- $request['quantity_used'];
         return parent::update($request, $id);
     
@@ -59,4 +64,12 @@ class SparepartController extends ParentController
      $data = DB::table('spareparts')->orderBy('id')->get();
      return $data;
    }
+   public function getSparepart()
+   {
+     $data = DB::table('spareparts')
+                ->where('quantity_remain', '>=',1)
+                ->orderBy('id')->get();
+     return $data;
+   }
+
 }
